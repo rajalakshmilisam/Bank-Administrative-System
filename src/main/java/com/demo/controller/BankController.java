@@ -25,11 +25,6 @@ public class BankController {
 	@Autowired
 	private BankService bankService;
 
-	@GetMapping("/hello")
-	public String greetings(){
-		return "WELCOME TO THE LOVE BANK";
-	}
-
 	@PostMapping("/addBank")
 
 	public BankResponseObject addBank(@RequestBody Bank bank) {
