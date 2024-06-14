@@ -5,27 +5,28 @@ services:
   mysql:
     image: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: claimmanagement
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=claimmanagement
+      - MYSQL_USER=anand
+      - MYSQL_PASSWORD=password
     ports:
-      - "3307:3307"
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
       
   bank-api:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: anandageethan/bank-api:latest
     ports:
       - "9090:9090"
     environment:
-      DB_HOST: mysql
-      DB_NAME: claimmanagement
-      DB_USERNAME: root
-      DB_PASSWORD: root
+      - DB_HOST=mysql
+      - DB_PORT=3307
+      - DB_NAME=claimmanagement
+      - DB_USERNAME=anand
+      - DB_PASSWORD=password
     depends_on:
       - mysql
 
