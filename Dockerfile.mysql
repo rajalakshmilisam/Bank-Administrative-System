@@ -1,0 +1,2 @@
+FROM mysql
+CMD [ "mysql","-h", "mysql", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}" ]
