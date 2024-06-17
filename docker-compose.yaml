@@ -6,7 +6,7 @@ services:
     # build:
     #   context: .
     #   dockerfile: Dockerfile.mysql
-    image: mysql
+    image: anandageethan/bank-db
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=claimmanagement
@@ -14,13 +14,14 @@ services:
       - MYSQL_PASSWORD=password
     ports:
       - "3306:3306"
-    # volumes:
-    #   - mysql-data:/var/lib/mysql
+    volumes:
+      - mysql-data:/var/lib/mysql
       
   bank-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    image: anandageethan/bank-api
     ports:
       - "9090:9090"
     environment:
@@ -32,15 +33,15 @@ services:
     depends_on:
       - mysql
 
-  # bank-ui:
-  #   image: anandageethan/bank-ui:latest
-  #   ports:
-  #     - 8080:8080
-  #   environment:
-  #      - REACT_APP_BACKEND_URL=http://bank-api:9090
-  #   depends_on:
-  #   - bank-api
-  #   - mysql
+  bank-ui:
+    image: anandageethan/bank-ui:latest
+    ports:
+      - 8080:8080
+    environment:
+       - REACT_APP_BACKEND_URL=http://bank-api:9090
+    depends_on:
+    - bank-api
+    - mysql
 
 volumes:
   mysql-data:

@@ -1,2 +1,5 @@
 FROM mysql
-CMD [ "mysql","-h", "mysql", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}" ]
+COPY setup.sql /docker-entrypoint-initdb.d/
+COPY custom-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/custom-entrypoint.sh
+ENTRYPOINT ["custom-entrypoint.sh"]
