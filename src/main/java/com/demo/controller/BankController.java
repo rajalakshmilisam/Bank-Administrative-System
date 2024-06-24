@@ -19,7 +19,8 @@ import com.demo.service.BankService;
 
 @RestController
 @RequestMapping("/bank")
-@CrossOrigin("http://bank-ui:8080")
+//@CrossOrigin("http://bank-ui:8080")
+@CrossOrigin("http://localhost:30123")
 public class BankController {
 
 	@Autowired
