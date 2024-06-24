@@ -14,7 +14,7 @@ import com.demo.response.LoginResponse;
 import com.demo.service.UserService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:30123")
 @RequestMapping("/api/user")
 public class UserController {
 
