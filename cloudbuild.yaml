@@ -1,0 +1,64 @@
+steps:
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        # Determine the branch name
+        branch_name=$(git rev-parse --abbrev-ref HEAD)
+        echo "Branch name: $branch_name"
+
+        # Set CHANGE_TYPE based on the branch name
+        if [[ "$branch_name" == feature/* ]]; then
+          CHANGE_TYPE="patch"
+        elif [[ "$branch_name" == hotfix/* ]]; then
+          CHANGE_TYPE="minor"
+        elif [[ "$branch_name" == release/* ]]; then
+          CHANGE_TYPE="major"
+        else
+          echo "Branch name does not match expected patterns. Exiting."
+          exit 1
+        fi
+        echo "Change type: $CHANGE_TYPE"
+
+        # Fetch all tags
+        git fetch --tags
+        
+        # Get the latest tag
+        latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+        echo "Latest tag: $latest_tag"
+
+        # Extract major, minor, patch from the latest tag
+        IFS='.' read -r -a version_parts <<< "${latest_tag#v}"
+        major=${version_parts[0]}
+        minor=${version_parts[1]}
+        patch=${version_parts[2]}
+
+        # Increment version number
+        if [ "$CHANGE_TYPE" == "major" ]; then
+          major=$((major + 1))
+          minor=0
+          patch=0
+        elif [ "$CHANGE_TYPE" == "minor" ]; then
+          minor=$((minor + 1))
+          patch=0
+        elif [ "$CHANGE_TYPE" == "patch" ]; then
+          patch=$((patch + 1))
+        fi
+
+        # New version tag
+        new_tag="v$major.$minor.$patch"
+        echo "New tag: $new_tag"
+
+        # Create and push the new tag
+        git tag $new_tag
+        git push origin $new_tag
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/my-project/bank-api:$new_tag', '.']
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/my-project/bank-api:$new_tag']
+
+images:
+  - 'gcr.io/my-project/bank-api'
