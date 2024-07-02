@@ -10,16 +10,16 @@ steps:
 
         # Set CHANGE_TYPE based on the branch name
         if [[ "$branch_name" == feature/* ]]; then
-          CHANGE_TYPE="patch"
+          ${_CHANGE_TYPE}="patch"
         elif [[ "$branch_name" == hotfix/* ]]; then
-          CHANGE_TYPE="minor"
+          ${_CHANGE_TYPE}="minor"
         elif [[ "$branch_name" == release/* ]]; then
-          CHANGE_TYPE="major"
+          ${_CHANGE_TYPE}="major"
         else
           echo "Branch name does not match expected patterns. Exiting."
           exit 1
         fi
-        echo "Change type: $CHANGE_TYPE"
+        echo "Change type: $${_CHANGE_TYPE}"
 
         # Fetch all tags
         git fetch --tags
@@ -35,14 +35,14 @@ steps:
         patch=${version_parts[2]}
 
         # Increment version number
-        if [ "$CHANGE_TYPE" == "major" ]; then
+        if [ "$${_CHANGE_TYPE}" == "major" ]; then
           major=$((major + 1))
           minor=0
           patch=0
-        elif [ "$CHANGE_TYPE" == "minor" ]; then
+        elif [ "$${_CHANGE_TYPE}" == "minor" ]; then
           minor=$((minor + 1))
           patch=0
-        elif [ "$CHANGE_TYPE" == "patch" ]; then
+        elif [ "$${_CHANGE_TYPE}" == "patch" ]; then
           patch=$((patch + 1))
         fi
 
