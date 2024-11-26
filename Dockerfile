@@ -1,9 +1,11 @@
-FROM openjdk:17-jdk-slim
-
+FROM maven AS builder
 WORKDIR /app
+COPY . .
+RUN mvn install -DskipTests
 
-COPY ./target/bank-api.jar app.jar
+FROM tomcat
+RUN rm -rf /usr/local/tomcat/webapps/*
+COPY --from=builder /app/target/bank-api.war /usr/local/tomcat/webapps/ROOT.war
 
-EXPOSE 9090
-
-CMD ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
+EXPOSE 8080
+CMD [ "catalina.sh", "run" ]
