@@ -28,7 +28,7 @@ public class BankController {
 
 	@GetMapping("/hello")
 	public String greetings(){
-		return "WELCOME TO THE LOVE BANK";
+		return "WELCOME, I'M THE BANK API and YOU ARE?";
 	}
 
 	@PostMapping("/addBank")
