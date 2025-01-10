@@ -1,5 +1,6 @@
 package com.demo.controller;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,19 +27,22 @@ public class BankController {
 	@Autowired
 	private BankService bankService;
 
+	private static final Logger log = LoggerFactory.getLogger(BankController.class);
+
 	@GetMapping("/hello")
 	public String greetings(){
+		log.info("Received request to Greet a user.");
 		return "WELCOME TO THE LOVE BANK";
 	}
 
 	@PostMapping("/addBank")
 
 	public BankResponseObject addBank(@RequestBody Bank bank) {
-
+		log.info("Received request to add a new bank: {}", bank.getBankName());
 		BankResponseObject responseObject = new BankResponseObject();
 
 		responseObject = bankService.addBank(bank);
-
+		log.info("Bank Added Successfully", )
 		return responseObject;
 	}
 
