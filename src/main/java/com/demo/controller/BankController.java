@@ -42,7 +42,7 @@ public class BankController {
 		BankResponseObject responseObject = new BankResponseObject();
 
 		responseObject = bankService.addBank(bank);
-		log.info("Bank Added Successfully", )
+		log.info("Bank Added Successfully");
 		return responseObject;
 	}
 
